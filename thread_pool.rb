@@ -15,7 +15,8 @@ class ThreadPool
 
   end
 
-
+  #Assings a thread to the passed in task Proc object
+  #Pool will allocate resources and complete the task
   def work(&task)
     assert task.is_a? Proc
     @pool.post do
@@ -57,8 +58,8 @@ class ThreadPool
 end
 
 #Small test:
-myPool = ThreadPool.new(5)
-myPool.work { puts "Test1"}
-myPool.work { puts "Test2"}
-myPool.shutdown
-myPool.wait_for_termination
+#myPool = ThreadPool.new(5)
+#myPool.work { puts "Test1"}
+#myPool.work { puts "Test2"}
+#myPool.shutdown
+#myPool.wait_for_termination
