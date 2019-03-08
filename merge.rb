@@ -74,7 +74,7 @@ class Merge
       leftValue = leftArray[0]
       rightValue = rightArray[0]
       # If index 0 is greater then index 1, this means they need to swap. If not, everything is okay and no work needs to be done
-      if leftValue > rightValue
+      if (leftValue <=> rightValue) == 1
         return [rightValue, leftValue]
       else
         return [leftValue, rightValue]
@@ -118,17 +118,17 @@ class Merge
 
     while true
       index = lowerBound + ((upperBound - lowerBound) / 2) # 1
-
+      comparator = (array[index] <=> value)
       # If the value is found, return index (2)
-      if array[index] == value
+      if comparator == 0
         return index
       # If the val at index is greater then the search value (3)
-      elsif array[index] > value
+    elsif comparator == 1
         # This means the entire array is greater then value
         if index == 0
           return -1
         # If the previous index is less then value, return that index
-        elsif array[index - 1] < value
+      elsif (array[index - 1] <=> value) == -1
           return index - 1
         end
         upperBound = index - 1 # make new subarray
@@ -138,7 +138,7 @@ class Merge
         if index == size - 1
           return size
         # If the next index is greater then value, return this index
-        elsif array[index + 1] > value
+      elsif (array[index + 1] <=> value) == 1
           return index
         end
         lowerBound = index + 1 # make new subarray
@@ -147,5 +147,5 @@ class Merge
   end
 end
 
-a = Merge.new([8, 3, 7, 1, 0, 4, 7, 9, 2])
+a = Merge.new(["ba", "str", "stp", "str", "a"])
 print(a)
