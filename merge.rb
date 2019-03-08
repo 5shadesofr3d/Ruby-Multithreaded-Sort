@@ -21,9 +21,13 @@ class Merge
   def mergeSort(array)
     # If the size of the array is not equal to 1... then it needs to be divided further
     if array.size != 1
+      threads = []
       mid = (array.size - 1) / 2 # 1
-      leftArray = mergeSort(array[0..mid]) # 2
-      rightArray = mergeSort(array[mid+1..(array.size - 1)]) # 3
+      leftArray = []
+      rightArray = []
+      threads << Thread.new(array[0..mid]) { |arr| leftArray += mergeSort(arr) } # 2
+      threads << Thread.new(array[mid+1..(array.size - 1)]) { |arr| rightArray += mergeSort(arr) } # 3
+      threads.each { |thr| thr.join }
       return merge(leftArray, rightArray) # 4
     else
       return array
@@ -87,9 +91,15 @@ class Merge
       binaryIndex = binarySearch(leftArray[leftMid], rightArray) # binary search to determine the binary index (2)
       rightEnd = rightArray.length - 1 # the end of the right array (1)
 
+      threads = []
+      leftMergedArray = []
+      rightMergedArray = []
+      threads << Thread.new(leftArray[0, leftMid + 1], rightArray[0, binaryIndex + 1]) { |leftArr, rightArr| leftMergedArray += merge(leftArr, rightArr) } # 2
+      threads << Thread.new(leftArray[leftMid + 1, leftEnd + 1], rightArray[binaryIndex + 1, rightEnd + 1]) { |leftArr, rightArr| rightMergedArray += merge(leftArr, rightArr) } # 3
+      threads.each { |thr| thr.join }
 
-      leftMergedArray = merge(leftArray[0, leftMid + 1], rightArray[0, binaryIndex + 1]) # call a new merge (3)
-      rightMergedArray = merge(leftArray[leftMid + 1, leftEnd + 1], rightArray[binaryIndex + 1, rightEnd + 1]) # call a new merge (3)
+      #leftMergedArray = merge(leftArray[0, leftMid + 1], rightArray[0, binaryIndex + 1]) # call a new merge (3)
+      #rightMergedArray = merge(leftArray[leftMid + 1, leftEnd + 1], rightArray[binaryIndex + 1, rightEnd + 1]) # call a new merge (3)
       return leftMergedArray + rightMergedArray #combine (4)
     end
   end
@@ -147,5 +157,5 @@ class Merge
   end
 end
 
-a = Merge.new(["ba", "str", "stp", "str", "a"])
+a = Merge.new([8, 3, 9, 2, 4])
 print(a)
