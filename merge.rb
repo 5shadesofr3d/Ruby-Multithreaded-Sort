@@ -1,6 +1,10 @@
 # Takes an array of objects and sorts them with the highest level of concurrency
+require 'test/unit'
 class Merge
+  include Test::Unit::Assertions
+
   def initialize(array)
+    assert array.is_a? Array
     @sortedArray = mergeSort(array)
   end
 
@@ -19,8 +23,13 @@ class Merge
   # =>    4. Once these two are sorted, they will be combined (merge) together and returned
 
   def mergeSort(array)
+    #pre
+
+
     # If the size of the array is not equal to 1... then it needs to be divided further
     if array.size != 1
+      assert array.is_a? Array
+      assert array.size > 1
       threads = []
       mid = (array.size - 1) / 2 # 1
       leftArray = []
@@ -28,6 +37,9 @@ class Merge
       threads << Thread.new(array[0..mid]) { |arr| leftArray += mergeSort(arr) } # 2
       threads << Thread.new(array[mid+1..(array.size - 1)]) { |arr| rightArray += mergeSort(arr) } # 3
       threads.each { |thr| thr.join }
+
+      #post
+
       return merge(leftArray, rightArray) # 4
     else
       return array
