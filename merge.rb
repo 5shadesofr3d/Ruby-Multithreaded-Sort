@@ -4,6 +4,10 @@ class Merge
     @sortedArray = mergeSort(array)
   end
 
+  def to_s
+    @sortedArray.to_s
+  end
+
   # mergeSort:
   # Inputs:
   # => array: An array of objects to be sorted
@@ -158,4 +162,13 @@ class Merge
 end
 
 a = Merge.new([8, 3, 9, 2, 4])
-print(a)
+puts a
+
+test = Array.new(10000) { Random.rand(1...1000000) }
+
+time_start = Time.now
+b = Merge.new(test)
+time_end = Time.now
+
+puts "Total time = " + (time_end - time_start).to_s
+puts b
