@@ -4,8 +4,20 @@ class Merge
   include Test::Unit::Assertions
 
   def initialize(array)
+    #pre
     assert array.is_a? Array
+    assert array.size > 0
+
     @sortedArray = mergeSort(array)
+
+    #post
+    assert @sortedArray.size > 0
+    assert array.size == @sortedArray.size
+    assert @sortedArray.is_a? Array
+  end
+
+  def to_s
+    @sortedArray.to_s
   end
 
   # mergeSort:
@@ -24,7 +36,8 @@ class Merge
 
   def mergeSort(array)
     #pre
-
+    assert array.is_a? Array
+    assert array.size > 0
 
     # If the size of the array is not equal to 1... then it needs to be divided further
     if array.size != 1
@@ -39,7 +52,10 @@ class Merge
       threads.each { |thr| thr.join }
 
       #post
-
+      assert leftArray.is_a? Array
+      assert rightArray.is_a? Array
+      assert rightArray.size > 0
+      assert leftArray.size > 0
       return merge(leftArray, rightArray) # 4
     else
       return array
@@ -170,4 +186,13 @@ class Merge
 end
 
 a = Merge.new([8, 3, 9, 2, 4])
-print(a)
+puts a
+
+test = Array.new(12) { Random.rand(1...1000000) }
+
+time_start = Time.now
+b = Merge.new(test)
+time_end = Time.now
+
+puts "Total time = " + (time_end - time_start).to_s
+puts b
