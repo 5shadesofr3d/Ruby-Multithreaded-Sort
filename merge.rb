@@ -218,14 +218,14 @@ class Merge
   end
 end
 
-a = Merge.new([8, 3, 9, 2, 4])
-puts a
+#a = Merge.new([8, 3, 9, 2, 4])
+#puts a
 
-test = Array.new(256) { Random.rand(-1000000...1000000) }
+#test = Array.new(256) { Random.rand(-1000000...1000000) }
 
-time_start = Time.now
-b = Merge.new(test)
-time_end = Time.now
+#time_start = Time.now
+#b = Merge.new(test)
+#time_end = Time.now
 
-puts "Total time = " + (time_end - time_start).to_s
-puts b
+#puts "Total time = " + (time_end - time_start).to_s
+#puts b
