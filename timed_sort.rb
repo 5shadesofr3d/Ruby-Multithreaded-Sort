@@ -30,11 +30,17 @@ class TimedMultiSort
       puts "Finished sort after: " + (Time.now-time_start).to_s + " seconds of the maximum " + (@max_t).to_s + " seconds"
     end
 
-    #kill threads
+    #kill all subthreads threads
+    this_thread = Thread.current
     Thread.list.each do |thr|
-      thr.kill
+      if not thr == this_thread
+        thr.kill
+      end
     end
-    t.kill
+
+    #kill this thread
+    this_thread.kill
+    assert Thread.list.size == 0
   end
 
 
@@ -68,6 +74,6 @@ class TimedMultiSort
   end
 end
 
-sorter = TimedMultiSort.new(0.2)
-sorter.load_array(Array.new(40) {Random.rand(0..10000)})
+sorter = TimedMultiSort.new(5)
+sorter.load_array(Array.new(4000) {Random.rand(0..10000)})
 sorter.start
