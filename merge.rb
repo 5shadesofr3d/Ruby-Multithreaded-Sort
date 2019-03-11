@@ -15,7 +15,7 @@ class Merge
     @sortedArray.each {|a| assert a.respond_to? :<=> } #Confirm comparable implemented
     assert @sortedArray.is_a? Array
     assert @sortedArray.size > 0
-    assert @sortedArray == @sortedArray.sort #confirm it is sorted. NOTE: this will effect runtime
+    assert @sortedArray.each_cons(2).all? { |a, b| (a <=> b) <= 0 } #confirm it is sorted. NOTE: this will effect runtime
     assert array.size == @sortedArray.size
 
     @threadArray = []
@@ -227,11 +227,13 @@ end
 #a = Merge.new([8, 3, 9, 2, 4])
 #puts a
 
-#test = Array.new(256) { Random.rand(-1000000...1000000) }
-
-#time_start = Time.now
-#b = Merge.new(test)
-#time_end = Time.now
-
-#puts "Total time = " + (time_end - time_start).to_s
-#puts b
+# test = Array.new(256) { Random.rand(-1000000...1000000) }
+# test2 = [1, 1, 1, 1]
+# time_start = Time.now
+# b = Merge.new(test)
+# c = Merge.new(test2)
+# time_end = Time.now
+#
+# puts "Total time = " + (time_end - time_start).to_s
+# puts b
+# puts c

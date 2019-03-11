@@ -118,3 +118,9 @@ class TimedMultiSort
     assert @to_sort.is_a? Array
   end
 end
+
+# arr_test = Array.new(2000) { Random.rand(-1000000...1000000) }
+# test = TimedMultiSort.new(10)
+# test.load_array(arr_test)
+# puts test.start
+
