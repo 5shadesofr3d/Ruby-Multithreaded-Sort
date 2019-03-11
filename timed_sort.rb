@@ -95,9 +95,3 @@ class TimedMultiSort
     assert @to_sort.is_a? Array
   end
 end
-
-sorter = TimedMultiSort.new(10)
-sorter.load_array(Array.new(40) {Random.rand(0..10000)})
-#sorter.load_csv("test.csv")
-#sorter.load_json("test.json","data")
-sorter.start
