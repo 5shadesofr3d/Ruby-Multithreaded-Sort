@@ -41,8 +41,7 @@ class Merge
 
     # If the size of the array is not equal to 1... then it needs to be divided further
     if array.size != 1
-      assert array.is_a? Array
-      assert array.size > 1
+
       threads = []
       mid = (array.size - 1) / 2 # 1
       leftArray = []
@@ -52,6 +51,9 @@ class Merge
       threads.each { |thr| thr.join }
 
       #post
+      assert threads.is_a? Array
+      assert threads.each {|a| assert a.is_a? Thread}
+      assert threads.each {|a| assert a.alive? == false }
       assert leftArray.is_a? Array
       assert rightArray.is_a? Array
       assert rightArray.size > 0
@@ -93,6 +95,12 @@ class Merge
     if rightArray == nil
       rightArray = []
     end
+    #pre
+    assert leftArray.is_a? Array
+    assert rightArray.is_a? Array
+    assert leftArray.size >= 0
+    assert rightArray.size >= 0
+
     # B
     if leftArray.size < rightArray.size
       return merge(rightArray, leftArray)
@@ -126,6 +134,16 @@ class Merge
       threads << Thread.new(leftArray[leftMid + 1, leftEnd + 1], rightArray[binaryIndex + 1, rightEnd + 1]) { |leftArr, rightArr| rightMergedArray += merge(leftArr, rightArr) } # 3
       threads.each { |thr| thr.join }
 
+      #post
+      assert leftMergedArray.is_a? Array
+      assert rightMergedArray.is_a? Array
+      assert threads.is_a? Array
+      assert threads.each {|a| assert a.is_a? Thread}
+      assert threads.each {|a| assert a.alive? == false }
+      assert leftMergedArray.size >= 0
+      assert rightMergedArray.size >= 0
+      assert leftMid = (leftEnd/2)
+      assert rightEnd = rightArray.size - 1
       #leftMergedArray = merge(leftArray[0, leftMid + 1], rightArray[0, binaryIndex + 1]) # call a new merge (3)
       #rightMergedArray = merge(leftArray[leftMid + 1, leftEnd + 1], rightArray[binaryIndex + 1, rightEnd + 1]) # call a new merge (3)
       return leftMergedArray + rightMergedArray #combine (4)
@@ -150,6 +168,11 @@ class Merge
   # =>    If these conditions are not met, the lower bound is increased, creating a smaller subarray to search that cuts off the beginning of the previous array
 
   def binarySearch(value, array)
+    #pre
+    assert array.is_a? Array
+    assert value.is_a? Numeric
+    assert array.size > 0
+
     size = array.size
     lowerBound = 0
     upperBound =  size - 1
@@ -157,6 +180,16 @@ class Merge
     while true
       index = lowerBound + ((upperBound - lowerBound) / 2) # 1
       comparator = (array[index] <=> value)
+      #post
+      assert upperBound.is_a? Numeric
+      assert lowerBound.is_a? Numeric
+      assert lowerBound >= 0
+      assert upperBound >= 0
+      assert lowerBound <= upperBound
+      assert index.is_a? Numeric
+      assert index >= 0
+      assert comparator.is_a? Numeric
+      assert comparator.between? -1,1 #comparator is either -1, 0 ,1
       # If the value is found, return index (2)
       if comparator == 0
         return index
@@ -188,7 +221,7 @@ end
 a = Merge.new([8, 3, 9, 2, 4])
 puts a
 
-test = Array.new(12) { Random.rand(1...1000000) }
+test = Array.new(256) { Random.rand(-1000000...1000000) }
 
 time_start = Time.now
 b = Merge.new(test)
