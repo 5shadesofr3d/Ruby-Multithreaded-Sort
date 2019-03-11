@@ -7,13 +7,16 @@ class Merge
     #pre
     assert array.is_a? Array
     assert array.size > 0
+    array.each {|a| assert a.respond_to? :<=> } #Confirm comparable implemented
 
     @sortedArray = mergeSort(array)
 
     #post
-    assert @sortedArray.size > 0
-    assert array.size == @sortedArray.size
+    @sortedArray.each {|a| assert a.respond_to? :<=> } #Confirm comparable implemented
     assert @sortedArray.is_a? Array
+    assert @sortedArray.size > 0
+    assert @sortedArray == @sortedArray.sort #confirm it is sorted. NOTE: this will effect runtime
+    assert array.size == @sortedArray.size
 
     @threadArray = []
   end
@@ -40,6 +43,7 @@ class Merge
     #pre
     assert array.is_a? Array
     assert array.size > 0
+    array.each {|a| assert a.respond_to? :<=> } #Confirm comparable implemented
 
     # If the size of the array is not equal to 1... then it needs to be divided further
     if array.size != 1
@@ -188,8 +192,8 @@ class Merge
   def binarySearch(value, array)
     #pre
     assert array.is_a? Array
-    assert value.is_a? Numeric
     assert array.size > 0
+    array.each {|a| assert a.respond_to? :<=> } #Confirm comparable implemented
 
     size = array.size
     lowerBound = 0

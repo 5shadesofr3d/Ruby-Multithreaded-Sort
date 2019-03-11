@@ -5,21 +5,29 @@ class IOController
   include Test::Unit::Assertions
 
   def initialize(file)
+    #pre
     assert file.is_a? String
+    assert FileTest.exist? @fileName
+
     @fileName = file
+
+    #post
+    assert FileTest.exist? @fileName
+    assert @fileName.is_a? String
   end
 
   #We assume the CSV file is ONE row, n cols.
+  #We only support importing Numerics with CSV
   def parse_csv
     #pre
     assert @fileName.end_with? ".csv"
+    assert FileTest.exist? @fileName
 
     objList = CSV.read(@fileName, converters: :numeric) #converts to numerics
 
     #post
     assert objList[0].is_a? Array
     assert objList[0].each { |a| assert a.is_a? Numeric }
-
     return objList[0] #grab 0 because we want to omit other rows
   end
 
@@ -30,6 +38,7 @@ class IOController
     #pre
     assert @fileName.end_with? ".json"
     assert header.is_a? String
+    assert FileTest.exist? @fileName
 
     jsonFile = File.read(@fileName)
     objList = JSON.parse(jsonFile)
@@ -43,12 +52,3 @@ class IOController
   end
 
 end
-
-#io = IOController.new("test.csv")
-#data = io.parse_csv
-#puts data
-
-#io = IOController.new("test.json")
-#data = io.parse_json("data")
-#puts data
-
