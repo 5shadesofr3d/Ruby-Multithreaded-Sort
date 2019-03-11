@@ -84,6 +84,18 @@ class TimedMultiSort
     assert @to_sort.is_a? Array
   end
 
+  def load_txt(name)
+    assert name.is_a? String
+    assert name.end_with? ".txt"
+    assert FileTest.exist? name
+
+    io = IOController.new(name)
+    @to_sort = io.parse_txt
+
+    @to_sort.each {|a| assert a.respond_to? :<=> } #Confirm comparable implemented
+    assert @to_sort.is_a? Array
+  end
+
   def load_array(data)
     assert data.is_a? Array
     data.each {|a| assert a.respond_to? :<=> } #Confirm comparable implemented

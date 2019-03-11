@@ -7,7 +7,7 @@ class IOController
   def initialize(file)
     #pre
     assert file.is_a? String
-    assert FileTest.exist? @fileName
+    assert FileTest.exist? file
 
     @fileName = file
 
@@ -21,6 +21,7 @@ class IOController
   def parse_csv
     #pre
     assert @fileName.end_with? ".csv"
+    assert @fileName.is_a? String
     assert FileTest.exist? @fileName
 
     objList = CSV.read(@fileName, converters: :numeric) #converts to numerics
@@ -38,6 +39,7 @@ class IOController
     #pre
     assert @fileName.end_with? ".json"
     assert header.is_a? String
+    assert @fileName.is_a? String
     assert FileTest.exist? @fileName
 
     jsonFile = File.read(@fileName)
@@ -47,8 +49,32 @@ class IOController
     #post
     assert jsonFile.is_a? String
     assert data.is_a? Array
-    assert data.each {|a| assert a.is_a? Numeric}
+    assert data.each {|a| assert a.respond_to? :<=>}
     return data
   end
 
+  #parse a .txt file with each element on a newline.. I.e of form:
+  #3
+  #4
+  #8
+  #...
+  #returns list of integers
+  def parse_txt
+    #pre
+    assert @fileName.end_with? ".txt"
+    assert @fileName.is_a? String
+    assert FileTest.exist? @fileName
+
+    data = []
+    File.open(@fileName,'r') do |file|
+      file.each_line do |line|
+        data << line.to_i
+      end
+    end
+
+    #post
+    assert data.is_a? Array
+    assert data.each {|a| assert a.respond_to? :<=>}
+    return data
+  end
 end
