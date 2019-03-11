@@ -25,10 +25,12 @@ class TimedMultiSort
     time_end = time_start + @max_t
 
 
-    t = Thread.new {Merge.new(@to_sort)}
+    mergeThread = Thread.new do
+      thr = Thread.current
+      thr[:merge] = Merge.new(@to_sort)
+    end
 
-
-    while Time.now <= time_end and t.alive?
+    while Time.now <= time_end and mergeThread.alive?
       #kill time
     end
 
@@ -38,24 +40,32 @@ class TimedMultiSort
       puts "Finished sort after: " + (Time.now-time_start).to_s + " seconds of the maximum " + (@max_t).to_s + " seconds"
     end
 
+    sortedData = []
+    #kill merge thread, get data
+    if mergeThread.key?("merge")
+      sortedData = mergeThread[:merge]
+    else
+      sortedData = @to_sort
+    end
+    mergeThread.kill
+
     #kill all subthreads threads
     this_thread = Thread.current
     Thread.list.each do |thr|
-      if thr != this_thread
+      if thr != this_thread && thr != mergeThread
         thr.kill
       end
     end
 
     puts "All threads stopped."
-    #kill this thread
-    this_thread.kill
 
-    #post (code wont actually get here, but i include contracts regardless)
-
+    #this_thread.kill
+    #post
     assert time_end >= time_start
-    assert Thread.list.each {|t| assert t.alive? == false}
-    assert this_thread.alive? == false
-    assert Thread.list.size == 0
+    #assert mergeThread.alive? == false NOTE: threads are shutting down, commented out because of race condition
+    #assert Thread.list.size == 1 #all threads are dead but this one, see above note
+
+    return sortedData
   end
 
 
