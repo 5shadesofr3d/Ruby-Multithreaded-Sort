@@ -14,6 +14,8 @@ class Merge
     assert @sortedArray.size > 0
     assert array.size == @sortedArray.size
     assert @sortedArray.is_a? Array
+
+    @threadArray = []
   end
 
   def to_s
@@ -46,8 +48,16 @@ class Merge
       mid = (array.size - 1) / 2 # 1
       leftArray = []
       rightArray = []
-      threads << Thread.new(array[0..mid]) { |arr| leftArray += mergeSort(arr) } # 2
-      threads << Thread.new(array[mid+1..(array.size - 1)]) { |arr| rightArray += mergeSort(arr) } # 3
+      begin
+        threads << Thread.new(array[0..mid]) { |arr| leftArray += mergeSort(arr) } # 2
+      rescue
+        return
+      end
+      begin
+        threads << Thread.new(array[mid+1..(array.size - 1)]) { |arr| rightArray += mergeSort(arr) } # 3
+      rescue
+        return
+      end
       threads.each { |thr| thr.join }
 
       #post
@@ -130,8 +140,16 @@ class Merge
       threads = []
       leftMergedArray = []
       rightMergedArray = []
-      threads << Thread.new(leftArray[0, leftMid + 1], rightArray[0, binaryIndex + 1]) { |leftArr, rightArr| leftMergedArray += merge(leftArr, rightArr) } # 2
-      threads << Thread.new(leftArray[leftMid + 1, leftEnd + 1], rightArray[binaryIndex + 1, rightEnd + 1]) { |leftArr, rightArr| rightMergedArray += merge(leftArr, rightArr) } # 3
+      begin
+        threads << Thread.new(leftArray[0, leftMid + 1], rightArray[0, binaryIndex + 1]) { |leftArr, rightArr| leftMergedArray += merge(leftArr, rightArr) } # 2
+      rescue
+        return
+      end
+      begin
+        threads << Thread.new(leftArray[leftMid + 1, leftEnd + 1], rightArray[binaryIndex + 1, rightEnd + 1]) { |leftArr, rightArr| rightMergedArray += merge(leftArr, rightArr) } # 3
+      rescue
+        return
+      end
       threads.each { |thr| thr.join }
 
       #post
