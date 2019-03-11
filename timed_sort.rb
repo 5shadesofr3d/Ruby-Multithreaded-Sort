@@ -53,17 +53,18 @@ class TimedMultiSort
     this_thread = Thread.current
     Thread.list.each do |thr|
       if thr != this_thread && thr != mergeThread
-        thr.kill
+        thr.kill.join
       end
     end
-
+    mergeThread.join #sometimes this thread fails to die before the assertion
+                     #this is here to prevent that race condition
     puts "All threads stopped."
 
     #this_thread.kill
     #post
     assert time_end >= time_start
-    #assert mergeThread.alive? == false NOTE: threads are shutting down, commented out because of race condition
-    #assert Thread.list.size == 1 #all threads are dead but this one, see above note
+    assert mergeThread.alive? == false
+    assert Thread.list.size == 1 #all threads are dead but this one
 
     return sortedData
   end
